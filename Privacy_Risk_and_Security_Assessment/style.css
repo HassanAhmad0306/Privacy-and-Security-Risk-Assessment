@@ -1,0 +1,332 @@
+:root {
+  --primary-color: #4285f4;
+  --danger-color: #ea4335;
+  --warning-color: #fbbc05;
+  --success-color: #34a853;
+  --purple-color: #9c27b0;
+  --info-color: #03a9f4;
+  --dark-color: #212529;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+
+/* Header Background */
+.header-bg {
+  background: linear-gradient(135deg, rgb(30, 60, 114) 0%, rgb(42, 82, 152) 100%);
+  padding: 2rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Content */
+.main-content {
+  margin-bottom: 3rem;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: visible;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Gradient Backgrounds */
+.bg-gradient-primary {
+  background: linear-gradient(to right, #4285f4, #5a9dfa);
+}
+
+.bg-gradient-danger {
+  background: linear-gradient(to right, #ea4335, #ff6659);
+}
+
+.bg-gradient-warning {
+  background: linear-gradient(to right, #fbbc05, #ffd04c);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(to right, #34a853, #5dd977);
+}
+
+.bg-gradient-purple {
+  background: linear-gradient(to right, #9c27b0, #bd5cd5);
+}
+
+.bg-gradient-info {
+  background: linear-gradient(to right, #03a9f4, #51cbff);
+}
+
+.bg-gradient-dark {
+  background: linear-gradient(to right, #212529, #495057);
+}
+
+/* Custom Tabs */
+.custom-tabs {
+  border-bottom: 0;
+}
+
+.nav-tabs .nav-link {
+  color: #495057;
+  border: 0;
+  padding: 1rem 1.5rem;
+  font-weight: 600;
+  margin-right: 5px;
+  border-radius: 10px 10px 0 0;
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--primary-color);
+  background-color: #fff;
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.question-group:hover{
+  z-index: 1;
+}
+/* Question Groups */
+.question-group {
+  margin-bottom: 2rem;
+}
+
+.question-group h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  
+}
+
+/* Tooltip Styles */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.info-icon {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.85rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Calculate Button */
+.calculate-btn {
+  background: linear-gradient(45deg, #4285f4, #9c27b0);
+  border: none;
+  padding: 12px 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.calculate-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Results Section */
+#results {
+  display: none;
+}
+
+.score-display {
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.score-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4285f4, #9c27b0);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  border: 8px solid #e9ecef;
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0 auto;
+}
+.progress {
+  height: 12px;
+  border-radius: 10px;
+  background-color: #e9ecef;
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  border-radius: 10px;
+  transition: width 1.5s ease-in-out;
+}
+
+.bg-purple {
+  background-color: var(--purple-color);
+}
+
+/* Category Score Bars */
+.category-score {
+  margin-bottom: 1.5rem;
+}
+
+/* Encryption Demo */
+.encryption-visual {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  font-family: monospace;
+  margin-top: 5px;
+  word-break: break-all;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+/* Signature Visual */
+.signature-visual {
+  width: 90%;
+  height: 100px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: monospace;
+  padding: 15px;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.signature-visual::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #2196f3, transparent);
+  animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 1s ease-in;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-tabs .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .score-circle {
+    width: 120px;
+    height: 120px;
+    font-size: 2.5rem;
+  }
+
+  .card-header h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Animation for encryption demonstration */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.typing-animation {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 3s steps(40, end);
+}
+
+/* #################### NEW ###################### */
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .score-circle {
+      width: 120px;
+      height: 120px;
+      font-size: 2.5rem;
+  }
+}

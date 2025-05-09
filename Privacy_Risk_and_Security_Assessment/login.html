@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Privacy & Security Risk Assessment</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- CryptoJS for hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      body {
+        background: linear-gradient(
+          135deg,
+          rgb(30, 60, 114) 0%,
+          rgb(42, 82, 152) 100%
+        );
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .container {
+        max-width: 400px;
+        width: 100%;
+      }
+      .form {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+        font-weight: 700;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 45px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        font-size: 16px;
+        height: 50px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        border-color: #2575fc;
+        box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.25);
+      }
+      .password-field {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .eye-icon {
+        position: absolute;
+        right: 16px;
+        top: 35%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+        font-size: 18px;
+      }
+      button {
+        width: 100%;
+        background-color: #2575fc;
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 50px;
+      }
+      button:hover {
+        background-color: #1a65e0;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .error-message {
+        color: #dc3545;
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+        min-height: 20px;
+      }
+      .success-message {
+        color: #198754;
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+      }
+      .link {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 15px;
+      }
+      .link a {
+        color: #2575fc;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .link a:hover {
+        text-decoration: underline;
+      }
+      #login-username {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236c757d" class="bi bi-person-fill" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/></svg>');
+        background-repeat: no-repeat;
+        background-position: 15px center;
+        background-size: 16px;
+      }
+      #login-password {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236c757d" class="bi bi-lock-fill" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/></svg>');
+        background-repeat: no-repeat;
+        background-position: 15px center;
+        background-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Login Form -->
+
+      <div id="login-form" class="form">
+        <h1>Login</h1>
+        <form id="loginForm">
+          <input
+            type="text"
+            id="login-username"
+            placeholder="Username"
+            required
+          />
+          <div class="password-field">
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Password"
+              required
+            />
+            <i id="show-login-password" class="fas fa-eye eye-icon"></i>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+        <a href="/Home_Page.html"
+          ><button type="button" id="back-button" class="back-button mt-3">
+            Back to HomePage
+          </button></a
+        >
+        <div id="login-message" class="error-message"></div>
+        <p class="link">
+          Don't have an account?
+          <a href="signup.html" id="show-signup-link">Sign Up</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Script for login functionality -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Hash function using SHA-256
+        function hashPassword(password) {
+          return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+        }
+        // Decrypt AES key
+        function decryptAESKey(encryptedAESKey, password) {
+          try {
+            const bytes = CryptoJS.AES.decrypt(encryptedAESKey, password);
+            return bytes.toString(CryptoJS.enc.Utf8);
+          } catch (error) {
+            return null;
+          }
+        }
+        // Show message (error or success)
+        function showMessage(element, message, type) {
+          element.textContent = message;
+          element.className =
+            type === "error" ? "error-message" : "success-message";
+        }
+        // Toggle password visibility - Login form
+        document
+          .getElementById("show-login-password")
+          .addEventListener("click", function () {
+            const passwordInput = document.getElementById("login-password");
+            const type =
+              passwordInput.getAttribute("type") === "password"
+                ? "text"
+                : "password";
+            passwordInput.setAttribute("type", type);
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+          });
+
+        // Handle login form submission
+        function handleLogin(e) {
+          e.preventDefault();
+
+          const username = document
+            .getElementById("login-username")
+            .value.trim();
+          const password = document.getElementById("login-password").value;
+          const messageElement = document.getElementById("login-message");
+
+          // Validate input
+          if (!username || !password) {
+            showMessage(
+              messageElement,
+              "Username and password are required",
+              "error"
+            );
+            return;
+          }
+
+          try {
+            // Get users array
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+
+            // Find user
+            const user = users.find((u) => u.username === username);
+
+            if (!user) {
+              showMessage(messageElement, "Username not found", "error");
+              return;
+            }
+
+            // Verify password
+            if (user.password !== hashPassword(password)) {
+              showMessage(messageElement, "Incorrect password", "error");
+              return;
+            }
+
+            // Decrypt AES key
+            const aesKey = decryptAESKey(user.encryptedAESKey, password);
+            if (!aesKey) {
+              showMessage(messageElement, "Failed to decrypt AES key", "error");
+              return;
+            }
+
+            // Store user data in sessionStorage
+            sessionStorage.setItem("currentUser", username);
+            sessionStorage.setItem("userAESKey", aesKey);
+
+            showMessage(
+              messageElement,
+              "Login successful! Redirecting...",
+              "success"
+            );
+
+            // Redirect to Dashboard.html
+            setTimeout(function () {
+              window.location.href = "Dashboard.html";
+            }, 1500);
+          } catch (error) {
+            console.error("Login error:", error);
+            showMessage(
+              messageElement,
+              "An error occurred during login. Please try again.",
+              "error"
+            );
+          }
+        }
+
+        // Attach login form submission handler
+        const loginForm = document.getElementById("loginForm");
+        if (loginForm) {
+          loginForm.addEventListener("submit", function (e) {
+            handleLogin(e);
+          });
+        }
+
+        // Check if localStorage is available
+        function isLocalStorageAvailable() {
+          try {
+            const test = "__test__";
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+        // Show warning if localStorage is not available
+        if (!isLocalStorageAvailable()) {
+          const loginMessage = document.getElementById("login-message");
+          showMessage(
+            loginMessage,
+            "Local storage is not available. Login functionality will not work.",
+            "error"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>

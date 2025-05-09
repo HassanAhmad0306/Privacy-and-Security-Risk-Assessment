@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy & Security Risk Assessment</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Custom Dropdown Styles */
+      /* General dropdown section styling */
+      .dropdown-section {
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+      }
+      .dropdown-label {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: #333;
+      }
+      .custom-dropdown {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+      }
+      .dropdown-toggle {
+        width: 100%;
+        padding: 10px 15px;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #333;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .dropdown-toggle::after {
+        content: "▼";
+        font-size: 12px;
+        margin-left: 10px;
+      }
+      .card-body,
+      .tab-content {
+        position: relative; /* Ensure dropdown can position relative to this */
+        overflow: visible !important; /* Prevent clipping of dropdown */
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        /* display: none; */
+        z-index: 10002; /* Higher z-index to ensure visibility */
+        max-height: 300px;
+        overflow-y: auto; /* Enable scrolling if content overflows */
+      }
+      .dropdown-toggle {
+        transition: none; /* Remove transitions to prevent jitter */
+      }
+
+      .dropdown-toggle:hover {
+        background-color: #f5f5f5; /* Smooth hover effect without movement */
+      }
+
+      .custom-dropdown.open .dropdown-menu {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 10px 15px;
+        font-size: 14px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .dropdown-item:hover {
+        background-color: #f0f0f0;
+      }
+
+      .dropdown-item input[type="checkbox"] {
+        margin-right: 10px;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+
+      .dropdown-item label {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        cursor: pointer;
+        margin-bottom: 0;
+      }
+      /* Additional styles from Dashboard.html */
+      .theme-toggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--header-gradient);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+
+      .toggle-password {
+        cursor: pointer;
+        background-color: #f8f9fa;
+        border-left: none;
+      }
+
+      .toggle-password:hover {
+        background-color: #e9ecef;
+      }
+
+      .password-strength {
+        height: 5px;
+        margin-top: 5px;
+        background-color: #e9ecef;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .password-strength-bar {
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s ease, background-color 0.3s ease;
+      }
+
+      .card-header.bg-gradient-primary {
+        background: linear-gradient(90deg, #4285f4, #4285f4) !important;
+      }
+
+      .card-header.bg-gradient-danger {
+        background: linear-gradient(90deg, #ff5733, #ff5733) !important;
+      }
+
+      .card-header.bg-gradient-warning {
+        background: linear-gradient(90deg, #f0ad4e, #f0ad4e) !important;
+      }
+
+      .card-header.bg-gradient-success {
+        background: linear-gradient(90deg, #28a745, #28a745) !important;
+      }
+
+      .card-header.bg-gradient-purple {
+        background: linear-gradient(90deg, #6f42c1, #6f42c1) !important;
+      }
+
+      body {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .container-fluid {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+
+      .main-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+      }
+
+      .main-content .card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        /* z-index: 2; */
+      }
+
+      .tab-content {
+        width: 100% !important;
+        padding: 1.5rem !important;
+      }
+
+      .navbar-brand {
+        color: white;
+      }
+
+      .navbar-brand:hover {
+        color: black;
+      }
+      .saved-state {
+        background-color: #28a745 !important;
+        color: white !important;
+        border-color: #28a745 !important;
+        transition: all 0.3s ease;
+      }
+
+      .saved-state i {
+        margin-right: 5px;
+      }
+      :root {
+        --primary-color: #4285f4;
+        --purple-color: #9c27b0;
+        --success-color: #34a853;
+        --text-color: #333;
+        --bg-color: #f8f9fa;
+        --header-gradient: linear-gradient(135deg, #4285f4, #9c27b0);
+        --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+      .dark-theme {
+        --primary-color: #6ea8fe;
+        --purple-color: #d093e6;
+        --success-color: #66d995;
+        --text-color: #e9ecef;
+        --bg-color: #212529;
+        --header-gradient: linear-gradient(135deg, #1e3c72, #2a5298);
+        --card-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: var(--transition);
+      }
+      .dropdown-label {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 8px;
+        color: var(--text-color);
+      }
+      .card-header {
+        /* color: var(--text-color); */
+        color: black;
+      }
+      .card-body {
+        background-color: var(--bg-color);
+      }
+      #plaindata,
+      #encryption {
+        color: black;
+      }
+      .theme-toggle {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: var(--header-gradient);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 55px;
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--card-shadow);
+        z-index: 1000;
+        transition: var(--transition);
+      }
+      .theme-toggle:hover {
+        transform: rotate(15deg);
+      }
+
+      .theme-toggle i {
+        font-size: 1.3rem;
+      }
+    </style>
+  </head>
+  <body id="mainContent">
+    <div class="header-bg">
+      <div class="d-flex justify-content-between align-items-center">
+        <a class="navbar-brand" href="Home_Page.html">
+          <h1><i class="fas fa-shield-alt me-2"></i>Security Assessment</h1>
+        </a>
+
+        <div>
+          <button
+            id="change-password-btn"
+            class="btn btn-outline-light me-2"
+            data-bs-toggle="modal"
+            data-bs-target="#changePasswordModal"
+          >
+            <i class="fas fa-key me-1"></i> Change Password
+          </button>
+          <a href="/Home_Page.html">
+            <button id="logoutBtn" class="btn btn-outline-light">
+              <i class="fas fa-sign-out-alt me-1"></i> Logout
+            </button>
+          </a>
+        </div>
+      </div>
+      <div class="container py-5">
+        <div class="text-center mb-5">
+          <h1 class="display-4 fw-bold text-white">
+            Welcome to Privacy & Security Risk Assessment
+          </h1>
+          <p class="lead text-white">
+            Evaluate your digital security posture and learn how to protect your
+            data
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid main-content">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-body p-0">
+          <nav>
+            <div class="nav nav-tabs custom-tabs" id="nav-tab" role="tablist">
+              <button
+                class="nav-link active"
+                id="nav-assessment-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#assessment"
+                type="button"
+                role="tab"
+                aria-controls="assessment"
+                aria-selected="true"
+              >
+                <i class="fas fa-clipboard-check me-2"></i>Assessment
+              </button>
+              <button
+                class="nav-link"
+                id="nav-education-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#education"
+                type="button"
+                role="tab"
+                aria-controls="education"
+                aria-selected="false"
+              >
+                <i class="fas fa-graduation-cap me-2"></i>Security Education
+              </button>
+              <button
+                class="nav-link"
+                id="nav-tools-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#tools"
+                type="button"
+                role="tab"
+                aria-controls="tools"
+                aria-selected="false"
+              >
+                <i class="fas fa-tools me-2"></i>Security Tools
+              </button>
+            </div>
+          </nav>
+
+          <div class="tab-content p-4" id="nav-tabContent">
+            <!-- Assessment Tab -->
+            <div
+              class="tab-pane fade show active"
+              id="assessment"
+              role="tabpanel"
+              aria-labelledby="nav-assessment-tab"
+            >
+              <form id="privacyForm">
+                <div class="question-group card mb-4 shadow-sm">
+                  <div class="card-header bg-gradient-primary">
+                    <h3 class="mb-0 text-white">
+                      <i class="fas fa-share-alt me-2"></i>Social Media Security
+                      <span class="tooltip-container">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <span class="tooltip-text"
+                          >Social media platforms often collect extensive
+                          personal data. Evaluate your sharing practices.</span
+                        >
+                      </span>
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >How often do you share personal information (birthday,
+                        location, etc.) on social media?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-1">
+                        <div class="dropdown-toggle">Sometimes</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="social_sharing"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-1')"
+                            />
+                            Never
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="social_sharing"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-1')"
+                            />
+                            Rarely
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="social_sharing"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-1')"
+                            />
+                            Sometimes
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="social_sharing"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-1')"
+                            />
+                            Often
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you review privacy settings on your social media
+                        accounts?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-2">
+                        <div class="dropdown-toggle">Rarely</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="privacy_settings"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-2')"
+                            />
+                            Regularly (monthly)
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="privacy_settings"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-2')"
+                            />
+                            Occasionally (few times a year)
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="privacy_settings"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-2')"
+                            />
+                            Rarely
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="privacy_settings"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-2')"
+                            />
+                            Never
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you use different usernames across platforms?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-3">
+                        <div class="dropdown-toggle">Mostly the same</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="different_usernames"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-3')"
+                            />
+                            Always use different usernames
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="different_usernames"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-3')"
+                            />
+                            Mostly different
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="different_usernames"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-3')"
+                            />
+                            Mostly the same
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="different_usernames"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-3')"
+                            />
+                            Always the same username
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="question-group card mb-4 shadow-sm">
+                  <div class="card-header bg-gradient-danger">
+                    <h3 class="mb-0 text-white">
+                      <i class="fas fa-shopping-cart me-2"></i>Online Shopping &
+                      Services
+                      <span class="tooltip-container">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <span class="tooltip-text"
+                          >Payment information and personal details stored
+                          online create potential data breach risks.</span
+                        >
+                      </span>
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >How often do you save payment information on
+                        websites?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-4">
+                        <div class="dropdown-toggle">On several sites</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="payment_info"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-4')"
+                            />
+                            Never
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="payment_info"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-4')"
+                            />
+                            On 1-2 trusted sites
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="payment_info"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-4')"
+                            />
+                            On several sites
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="payment_info"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-4')"
+                            />
+                            On most sites I use
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you read privacy policies before signing up for
+                        services?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-5">
+                        <div class="dropdown-toggle">Rarely</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="read_policies"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-5')"
+                            />
+                            Always
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="read_policies"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-5')"
+                            />
+                            Sometimes
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="read_policies"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-5')"
+                            />
+                            Rarely
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="read_policies"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-5')"
+                            />
+                            Never
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >How do you handle tracking cookies?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-6">
+                        <div class="dropdown-toggle">
+                          Accept cookies from trusted sites
+                        </div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="cookies"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-6')"
+                            />
+                            Block all cookies
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="cookies"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-6')"
+                            />
+                            Accept only necessary cookies
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="cookies"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-6')"
+                            />
+                            Accept cookies from trusted sites
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="cookies"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-6')"
+                            />
+                            Accept all cookies
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="question-group card mb-4 shadow-sm">
+                  <div class="card-header bg-gradient-warning">
+                    <h3 class="mb-0 text-white">
+                      <i class="fas fa-key me-2"></i>Password & Authentication
+                      Security
+                      <span class="tooltip-container">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <span class="tooltip-text"
+                          >Strong authentication practices are your first line
+                          of defense against unauthorized access.</span
+                        >
+                      </span>
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >How do you manage your passwords?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-7">
+                        <div class="dropdown-toggle">
+                          Use the same password for most accounts
+                        </div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_management"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-7')"
+                            />
+                            Password manager with unique passwords
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_management"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-7')"
+                            />
+                            Remember a few different strong passwords
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_management"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-7')"
+                            />
+                            Use the same password for most accounts
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_management"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-7')"
+                            />
+                            Simple passwords that are easy to remember
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you use two-factor authentication when
+                        available?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-8">
+                        <div class="dropdown-toggle">Sometimes</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="two_factor"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-8')"
+                            />
+                            Always
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="two_factor"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-8')"
+                            />
+                            For important accounts
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="two_factor"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-8')"
+                            />
+                            Sometimes
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="two_factor"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-8')"
+                            />
+                            Never
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >What is your typical password complexity?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-9">
+                        <div class="dropdown-toggle">
+                          8 chars, simple combinations
+                        </div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_complexity"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-9')"
+                            />
+                            12+ chars with special chars, numbers, mixed case
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_complexity"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-9')"
+                            />
+                            8-12 chars with some variation
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_complexity"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-9')"
+                            />
+                            8 chars, simple combinations
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="password_complexity"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-9')"
+                            />
+                            Less than 8 chars, simple words
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="question-group card mb-4 shadow-sm">
+                  <div class="card-header bg-gradient-success">
+                    <h3 class="mb-0 text-white">
+                      <i class="fas fa-network-wired me-2"></i>Network Security
+                      <span class="tooltip-container">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <span class="tooltip-text"
+                          >Your network connection security affects your data
+                          protection during transmission.</span
+                        >
+                      </span>
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you use public WiFi networks?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-10">
+                        <div class="dropdown-toggle">
+                          Sometimes without protection
+                        </div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="public_wifi"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-10')"
+                            />
+                            Never
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="public_wifi"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-10')"
+                            />
+                            Only with VPN
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="public_wifi"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-10')"
+                            />
+                            Sometimes without protection
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="public_wifi"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-10')"
+                            />
+                            Frequently without protection
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you use a VPN service?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-11">
+                        <div class="dropdown-toggle">Occasionally</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="vpn_usage"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-11')"
+                            />
+                            Always
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="vpn_usage"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-11')"
+                            />
+                            Most of the time
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="vpn_usage"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-11')"
+                            />
+                            Occasionally
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="vpn_usage"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-11')"
+                            />
+                            Never
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >How often do you check for HTTPS before entering
+                        sensitive information?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-12">
+                        <div class="dropdown-toggle">Sometimes</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="https_check"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-12')"
+                            />
+                            Always
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="https_check"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-12')"
+                            />
+                            Most of the time
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="https_check"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-12')"
+                            />
+                            Sometimes
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="https_check"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-12')"
+                            />
+                            Never
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="question-group card mb-4 shadow-sm">
+                  <div class="card-header bg-gradient-purple">
+                    <h3 class="mb-0 text-white">
+                      <i class="fas fa-laptop me-2"></i>Device Security
+                      <span class="tooltip-container">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <span class="tooltip-text"
+                          >Physical and software security of your devices is
+                          crucial for data protection.</span
+                        >
+                      </span>
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >How often do you update your operating system and
+                        applications?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-13">
+                        <div class="dropdown-toggle">When convenient</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="updates"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-13')"
+                            />
+                            Immediately when available
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="updates"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-13')"
+                            />
+                            Within a week
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="updates"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-13')"
+                            />
+                            When convenient
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="updates"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-13')"
+                            />
+                            Rarely or never
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you use antivirus/anti-malware software?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-14">
+                        <div class="dropdown-toggle">Basic protection only</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="antivirus"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-14')"
+                            />
+                            Yes, always updated
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="antivirus"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-14')"
+                            />
+                            Yes, but update occasionally
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="antivirus"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-14')"
+                            />
+                            Basic protection only
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="antivirus"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-14')"
+                            />
+                            No protection
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label class="form-label dropdown-label"
+                        >Do you use screen locks on your devices?</label
+                      >
+                      <div class="custom-dropdown" id="dropdown-15">
+                        <div class="dropdown-toggle">Simple pattern/PIN</div>
+                        <div class="dropdown-menu">
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="screen_lock"
+                              value="0"
+                              onchange="updateDropdown(this, 'dropdown-15')"
+                            />
+                            Yes, with biometrics or strong password
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="screen_lock"
+                              value="1"
+                              onchange="updateDropdown(this, 'dropdown-15')"
+                            />
+                            Yes, with PIN
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="screen_lock"
+                              value="2"
+                              checked
+                              onchange="updateDropdown(this, 'dropdown-15')"
+                            />
+                            Simple pattern/PIN
+                          </label>
+                          <label class="dropdown-item">
+                            <input
+                              type="checkbox"
+                              name="screen_lock"
+                              value="3"
+                              onchange="updateDropdown(this, 'dropdown-15')"
+                            />
+                            No screen lock
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-lg mt-4 px-4 calculate-btn"
+                    onclick="calculateRisk()"
+                  >
+                    <i class="fas fa-calculator me-2"></i>Calculate My Privacy &
+                    Security Risk
+                  </button>
+                </div>
+              </form>
+
+              <div
+                id="results"
+                class="mt-5 pt-4 border-top"
+                style="display: none"
+              >
+                <h2 class="text-center mb-4">
+                  Your Privacy & Security Risk Assessment
+                </h2>
+
+                <div class="score-display text-center mb-4">
+                  <div class="score-circle">
+                    <span id="score">0</span>
+                  </div>
+                  <p id="riskLevel" class="h4 mt-3"></p>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div id="categoryScores" class="mb-4">
+                      <h3 class="mb-3">Category Breakdown:</h3>
+
+                      <div class="category-score mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span
+                            ><i class="fas fa-share-alt me-2"></i>Social
+                            Media</span
+                          >
+                          <span id="socialScore">0%</span>
+                        </div>
+                        <div class="progress">
+                          <div
+                            id="socialBar"
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            style="width: 0%"
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div class="category-score mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span
+                            ><i class="fas fa-shopping-cart me-2"></i>Online
+                            Services</span
+                          >
+                          <span id="shoppingScore">0%</span>
+                        </div>
+                        <div class="progress">
+                          <div
+                            id="shoppingBar"
+                            class="progress-bar bg-danger"
+                            role="progressbar"
+                            style="width: 0%"
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div class="category-score mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span
+                            ><i class="fas fa-key me-2"></i>Authentication</span
+                          >
+                          <span id="passwordScore">0%</span>
+                        </div>
+                        <div class="progress">
+                          <div
+                            id="passwordBar"
+                            class="progress-bar bg-warning"
+                            role="progressbar"
+                            style="width: 0%"
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div class="category-score mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span
+                            ><i class="fas fa-network-wired me-2"></i>Network
+                            Security</span
+                          >
+                          <span id="networkScore">0%</span>
+                        </div>
+                        <div class="progress">
+                          <div
+                            id="networkBar"
+                            class="progress-bar bg-success"
+                            role="progressbar"
+                            style="width: 0%"
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div class="category-score mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <span
+                            ><i class="fas fa-laptop me-2"></i>Device
+                            Security</span
+                          >
+                          <span id="deviceScore">0%</span>
+                        </div>
+                        <div class="progress">
+                          <div
+                            id="deviceBar"
+                            class="progress-bar bg-purple"
+                            role="progressbar"
+                            style="width: 0%"
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div id="recommendations" class="card shadow-sm">
+                      <div class="card-header bg-gradient-info">
+                        <h3 class="mb-0 text-white">
+                          <i class="fas fa-lightbulb me-2"></i>Recommendations
+                        </h3>
+                      </div>
+                      <div class="card-body" id="recommendationsList">
+                        <!-- Recommendations will be inserted here -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="encryption-demo mt-5 card shadow-sm">
+                  <div class="card-header bg-gradient-dark">
+                    <h3 class="mb-0 text-white">
+                      <i class="fas fa-shield-alt me-2"></i>Your Data Security
+                      Demonstration
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <p class="lead">
+                      This demonstration shows how your assessment data would be
+                      encrypted and protected:
+                    </p>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="encryption-step card mb-3">
+                          <div class="card-header">
+                            <strong>1. Data Collection</strong>
+                          </div>
+                          <div class="card-body">
+                            <div class="encryption-visual" id="plaindata">
+                              Collecting data...
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="encryption-step card mb-3">
+                          <div class="card-header">
+                            <strong>2. AES Encryption</strong>
+                          </div>
+                          <div class="card-body">
+                            <div class="encryption-visual" id="encryption">
+                              Encrypting data...
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  id="results"
+                  class="mt-5 pt-4 border-top"
+                  style="display: block"
+                >
+                  <div
+                    class="text-center mt-4 justify-content-between"
+                    style="position: relative"
+                  >
+                    <button
+                      class="btn btn-outline-primary"
+                      onclick="document.getElementById('results').style.display='none'; window.scrollTo(0,0);"
+                    >
+                      <i class="fas fa-redo me-2"></i>Take Assessment Again
+                    </button>
+                    <button
+                      class="btn btn-success ms-3"
+                      onclick="downloadReport()"
+                    >
+                      <i class="fas fa-download me-2"></i>Download Report
+                    </button>
+                    <button id="printBtn" class="btn btn-secondary ms-3">
+                      Print
+                    </button>
+                    <button id="saveBtn" class="btn btn-primary ms-3">
+                      <i class="fas fa-save me-2"></i>Save Assessment
+                    </button>
+                    <!-- <button id="savedbtn" class="btn btn-primary ms-3 savedBtn">
+                      <i class="fa-solid fa-check mr-2"></i>Saved
+                    </button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Education Tab -->
+            <div
+              class="tab-pane fade"
+              id="education"
+              role="tabpanel"
+              aria-labelledby="nav-education-tab"
+            >
+              <h2 class="text-center mb-4">Cryptography & Security Concepts</h2>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="card shadow-sm h-100">
+                    <div class="card-header bg-gradient-warning">
+                      <h3 class="mb-0 text-white">
+                        <i class="fas fa-fingerprint me-2"></i>Hashing Functions
+                        (SHA-256)
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        Hashing functions convert data of arbitrary size to
+                        fixed-size values. They are used for data integrity
+                        verification and password storage.
+                      </p>
+                      <div class="accordion" id="sha256Accordion">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingSHA">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseSHA"
+                              aria-expanded="false"
+                              aria-controls="collapseSHA"
+                            >
+                              Learn about SHA-256
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseSHA"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingSHA"
+                            data-bs-parent="#sha256Accordion"
+                          >
+                            <div class="accordion-body">
+                              <p>
+                                SHA-256 is a member of the SHA-2 cryptographic
+                                hash functions designed by the NSA. SHA stands
+                                for Secure Hash Algorithm.
+                              </p>
+                              <p>
+                                A cryptographic hash function is an algorithm
+                                that takes an arbitrary amount of data input and
+                                produces a fixed-size output of enciphered text
+                                called a hash value, or just "hash."
+                              </p>
+                              <p>
+                                SHA-256 generates a unique 256-bit (32-byte)
+                                signature for a text. It's commonly used in
+                                blockchain technology and for verifying file
+                                integrity.
+                              </p>
+                              SHA-512 is a member of the SHA-2 cryptographic
+                              hash function family designed by the NSA. SHA
+                              stands for Secure Hash Algorithm.
+                              <br />
+                              <p>
+                                SHA-512 generates a unique 512-bit (64-byte)
+                                signature for a text. It offers stronger
+                                security than SHA-256 due to its longer bit
+                                length, making it more resistant to collision
+                                and brute-force attacks.
+                                <br /><br />
+                                SHA-512 is commonly used in high-security
+                                applications such as digital certificates, data
+                                integrity verification, and cryptographic
+                                protocols.
+                              </p>
+
+                              <div class="sha-demo mt-3">
+                                <h5>SHA-256 and SHA-512 Demo</h5>
+                                <div class="mb-3">
+                                  <input
+                                    type="text"
+                                    class="form-control"
+                                    id="shaInput"
+                                    placeholder="Enter text to hash"
+                                  />
+                                </div>
+                                <div class="mb-2">
+                                  <button
+                                    type="button"
+                                    class="btn btn-warning text-white"
+                                    onclick="generateHash()"
+                                  >
+                                    Generate Hash
+                                  </button>
+                                </div>
+                                <div class="mt-3">
+                                  <label class="form-label">Hash result:</label>
+                                  <div
+                                    class="alert alert-info overflow-auto"
+                                    id="hashResult"
+                                    style="font-family: monospace"
+                                  >
+                                    Hash will appear here
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <div class="card shadow-sm h-100">
+                    <div class="card-header bg-gradient-info">
+                      <h3 class="mb-0 text-white">
+                        <i class="fas fa-exchange-alt me-2"></i>Key Exchange
+                        (Diffie-Hellman)
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        Key exchange protocols allow two parties to establish a
+                        shared secret key over an insecure channel without
+                        having a prior shared secret.
+                      </p>
+                      <div class="accordion" id="dhAccordion">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header" id="headingDH">
+                            <button
+                              class="accordion-button collapsed"
+                              type="button"
+                              data-bs-toggle="collapse"
+                              data-bs-target="#collapseDH"
+                              aria-expanded="false"
+                              aria-controls="collapseDH"
+                            >
+                              Learn about Diffie-Hellman
+                            </button>
+                          </h2>
+                          <div
+                            id="collapseDH"
+                            class="accordion-collapse collapse"
+                            aria-labelledby="headingDH"
+                            data-bs-parent="#dhAccordion"
+                          >
+                            <div class="accordion-body">
+                              <p>
+                                The Diffie–Hellman key exchange method allows
+                                two parties that have no prior knowledge of each
+                                other to jointly establish a shared secret key
+                                over an insecure channel.
+                              </p>
+                              <p>
+                                This key can then be used to encrypt subsequent
+                                communications using a symmetric key cipher.
+                              </p>
+                              <p>
+                                The method was followed shortly afterward by
+                                RSA, an implementation of public-key
+                                cryptography using asymmetric algorithms.
+                              </p>
+
+                              <div class="container mt-5">
+                                <div class="dh-demo mt-3">
+                                  <h5>Diffie-Hellman Key Exchange Demo</h5>
+
+                                  <!-- Section for setting the public parameters (p, g) -->
+                                  <div class="mb-4">
+                                    <label class="form-label"
+                                      >Prime Number (p):</label
+                                    >
+                                    <input
+                                      type="number"
+                                      class="form-control"
+                                      id="prime"
+                                      value="23"
+                                      min="2"
+                                    />
+                                  </div>
+                                  <div class="mb-4">
+                                    <label class="form-label"
+                                      >Generator (g):</label
+                                    >
+                                    <input
+                                      type="number"
+                                      class="form-control"
+                                      id="generator"
+                                      value="5"
+                                      min="2"
+                                    />
+                                  </div>
+
+                                  <div class="row">
+                                    <!-- Alice's Section -->
+                                    <div class="col-md-6">
+                                      <div class="card mb-3">
+                                        <div class="card-header">
+                                          Sender (Alice)
+                                        </div>
+                                        <div class="card-body">
+                                          <div class="mb-2">
+                                            <label class="form-label"
+                                              >Private value:</label
+                                            >
+                                            <input
+                                              type="number"
+                                              class="form-control"
+                                              id="alicePrivate"
+                                              value="6"
+                                              min="1"
+                                            />
+                                          </div>
+                                          <div class="mb-2">
+                                            <label class="form-label"
+                                              >Public value:</label
+                                            >
+                                            <div
+                                              class="form-control bg-light"
+                                              id="alicePublic"
+                                            >
+                                              -
+                                            </div>
+                                          </div>
+                                          <div class="mb-2">
+                                            <label class="form-label"
+                                              >Shared secret:</label
+                                            >
+                                            <div
+                                              class="form-control bg-light"
+                                              id="aliceSecret"
+                                            >
+                                              -
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <!-- Bob's Section -->
+                                    <div class="col-md-6">
+                                      <div class="card mb-3">
+                                        <div class="card-header">
+                                          Receiver (Bob)
+                                        </div>
+                                        <div class="card-body">
+                                          <div class="mb-2">
+                                            <label class="form-label"
+                                              >Private value:</label
+                                            >
+                                            <input
+                                              type="number"
+                                              class="form-control"
+                                              id="bobPrivate"
+                                              value="15"
+                                              min="1"
+                                            />
+                                          </div>
+                                          <div class="mb-2">
+                                            <label class="form-label"
+                                              >Public value:</label
+                                            >
+                                            <div
+                                              class="form-control bg-light"
+                                              id="bobPublic"
+                                            >
+                                              -
+                                            </div>
+                                          </div>
+                                          <div class="mb-2">
+                                            <label class="form-label"
+                                              >Shared secret:</label
+                                            >
+                                            <div
+                                              class="form-control bg-light"
+                                              id="bobSecret"
+                                            >
+                                              -
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="text-center">
+                                    <button
+                                      type="button"
+                                      class="btn btn-info text-white"
+                                      onclick="performDiffieHellman()"
+                                    >
+                                      Run Key Exchange
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tools Tab -->
+            <div
+              class="tab-pane fade"
+              id="tools"
+              role="tabpanel"
+              aria-labelledby="nav-tools-tab"
+            >
+              <h2 class="text-center mb-4">Security Tools & Demonstrations</h2>
+
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="card shadow-sm">
+                    <div class="card-header bg-gradient-primary">
+                      <h3 class="mb-0 text-white">
+                        <i class="fas fa-shield-alt me-2"></i>Password Strength
+                        Tester
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        Test the strength of your passwords based on complexity
+                        and entropy.
+                      </p>
+                      <div class="input-group mb-3">
+                        <input
+                          type="password"
+                          id="passwordTest"
+                          class="form-control"
+                          placeholder="Enter a password to test"
+                        />
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          onclick="testPassword()"
+                        >
+                          Test
+                        </button>
+                        <button
+                          class="btn btn-outline-secondary"
+                          type="button"
+                          id="togglePassword"
+                        >
+                          <i class="fas fa-eye"></i>
+                        </button>
+                      </div>
+                      <div id="passwordResults" class="mt-3"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                  <div class="card shadow-sm">
+                    <div class="card-header bg-gradient-warning">
+                      <h3 class="mb-0 text-white">
+                        <i class="fas fa-exchange-alt me-2"></i>Caesar Cipher
+                        Demonstration
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <p>See how a simple substitution cipher works:</p>
+                      <div class="mb-3">
+                        <input
+                          type="text"
+                          id="plaintext"
+                          class="form-control"
+                          placeholder="Enter text to encrypt"
+                        />
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <label class="form-label" for="shift"
+                            >Shift value (1-25):</label
+                          >
+                          <input
+                            type="number"
+                            id="shift"
+                            class="form-control"
+                            min="1"
+                            max="25"
+                            value="3"
+                          />
+                        </div>
+                        <div class="col-md-6 d-flex align-items-end">
+                          <button
+                            class="btn btn-warning text-white w-100"
+                            onclick="caesarCipher()"
+                          >
+                            Encrypt/Decrypt
+                          </button>
+                        </div>
+                      </div>
+                      <div id="cipherResults" class="mt-3"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="card shadow-sm">
+                    <div class="card-header bg-gradient-danger">
+                      <h3 class="mb-0 text-white">
+                        <i class="fas fa-file-signature me-2"></i> Digital
+                        Signature Verification
+                      </h3>
+                    </div>
+                    <div class="card-body">
+                      <p>
+                        This tool demonstrates how digital signatures are
+                        created and verified using RSA:
+                      </p>
+
+                      <!-- Sign Message Section -->
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h5>Sign a Message</h5>
+                          <div class="mb-3">
+                            <label class="form-label">Message:</label>
+                            <input
+                              type="text"
+                              id="signMessage"
+                              class="form-control"
+                              placeholder="Enter message to sign"
+                            />
+                          </div>
+                          <button
+                            class="btn btn-danger mb-3"
+                            onclick="signMessage()"
+                          >
+                            Sign Message
+                          </button>
+                          <div class="mb-3">
+                            <label class="form-label">Signature:</label>
+                            <div
+                              class="alert alert-secondary overflow-auto"
+                              style="font-family: monospace"
+                              id="signatureOutput"
+                            >
+                              Signature will appear here
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Verify Signature Section -->
+                        <div class="col-md-6">
+                          <h5>Verify a Signature</h5>
+                          <div class="mb-3">
+                            <label class="form-label">Message:</label>
+                            <input
+                              type="text"
+                              id="verifyMessage"
+                              class="form-control"
+                              placeholder="Enter original message"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Signature:</label>
+                            <input
+                              type="text"
+                              id="verifySignature"
+                              class="form-control"
+                              placeholder="Enter signature to verify"
+                            />
+                          </div>
+                          <button
+                            class="btn btn-secondary mb-3"
+                            onclick="verifySignature()"
+                          >
+                            Verify Signature
+                          </button>
+                          <div class="mb-3">
+                            <div
+                              id="verificationResult"
+                              class="alert alert-info"
+                            >
+                              Verification result will appear here
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- ###################### -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <footer class="bg-dark text-white py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <h4>Comprehensive Privacy & Security Risk Assessment</h4>
+            <p>
+              This tool helps you evaluate your digital security posture and
+              provides recommendations to improve your online privacy and
+              security.
+            </p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <h5>Resources</h5>
+            <ul class="list-unstyled">
+              <li><a href="#" class="text-white">Privacy Blog</a></li>
+              <li><a href="#" class="text-white">Security Tools</a></li>
+              <li><a href="#" class="text-white">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col text-center">
+            <p class="mb-0">
+              © 2025 Privacy & Security Assessment. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.2.1/jsencrypt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/10.0.0/jsrsasign-all-min.js"></script>
+    <script src="script.js"></script>
+    <script>
+      document.querySelectorAll(".custom-dropdown").forEach((dropdown) => {
+        const toggle = dropdown.querySelector(".dropdown-toggle");
+        // Open/close dropdown on click
+        toggle.addEventListener("click", (e) => {
+          e.stopPropagation();
+          document.querySelectorAll(".custom-dropdown").forEach((d) => {
+            if (d !== dropdown) d.classList.remove("open");
+          });
+          dropdown.classList.toggle("open");
+        });
+      });
+      // Close all dropdowns when clicking outside or interacting with tabs/categories
+      document.addEventListener("click", (e) => {
+        const isDropdownClick = e.target.closest(".custom-dropdown");
+        const isTabOrCategoryClick =
+          e.target.closest(".nav-link") || e.target.closest(".card-header");
+
+        if (!isDropdownClick) {
+          document.querySelectorAll(".custom-dropdown").forEach((dropdown) => {
+            dropdown.classList.remove("open");
+          });
+        }
+
+        // Close all dropdowns when switching tabs or categories
+        if (isTabOrCategoryClick) {
+          document.querySelectorAll(".custom-dropdown").forEach((dropdown) => {
+            dropdown.classList.remove("open");
+          });
+        }
+      });
+
+      // Update dropdown toggle text and ensure single selection within the same dropdown
+      function updateDropdown(checkbox, dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        const toggle = dropdown.querySelector(".dropdown-toggle");
+        // If the checkbox is already checked, do nothing (prevent unchecking on re-click)
+        if (checkbox.checked) {
+          dropdown.classList.remove("open"); // Close dropdown if re-clicking the same checkbox
+          return; // Exit the function to prevent any changes
+        }
+        // Uncheck other checkboxes within the same dropdown
+        dropdown.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          if (cb !== checkbox) {
+            cb.checked = false; // Uncheck all other checkboxes
+          }
+        });
+        // Check the clicked checkbox
+        checkbox.checked = true;
+        // Update the toggle text with the selected option
+        const selectedText = checkbox.parentElement.textContent.trim();
+        toggle.textContent = selectedText;
+
+        // Close dropdown immediately after selection
+        dropdown.classList.remove("open");
+      }
+      // ######################################################
+      const themeToggle = document.getElementById("themeToggle");
+      const themeIcon = document.getElementById("themeIcon");
+      const body = document.body;
+      // Check local storage for theme preference
+      const currentTheme = localStorage.getItem("theme");
+      if (currentTheme === "dark") {
+        body.classList.add("dark-theme");
+        document.querySelector(".dropdown-label").classList.add("dark-theme");
+        themeIcon.classList.replace("fa-moon", "fa-sun");
+      }
+      themeToggle.addEventListener("click", () => {
+        body.classList.toggle("dark-theme");
+        document
+          .querySelector(".dropdown-label")
+          .classList.toggle("light-theme");
+        document.querySelector(".card-header").classList.toggle("dark-theme");
+
+        // Update icon
+        if (body.classList.contains("dark-theme")) {
+          themeIcon.classList.replace("fa-moon", "fa-sun");
+          localStorage.setItem("theme", "dark");
+        } else {
+          themeIcon.classList.replace("fa-sun", "fa-moon");
+          localStorage.setItem("theme", "light");
+        }
+      });
+    </script>
+  </body>
+</html>

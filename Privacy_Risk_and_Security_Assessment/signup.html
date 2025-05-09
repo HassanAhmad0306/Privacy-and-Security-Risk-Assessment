@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Privacy & Security Risk Assessment</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome Icons -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- CryptoJS for hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      body {
+        background: linear-gradient(
+          135deg,
+          rgb(30, 60, 114) 0%,
+          rgb(42, 82, 152) 100%
+        );
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .container {
+        max-width: 400px;
+        width: 100%;
+      }
+      .form {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #333;
+        font-weight: 700;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 45px;
+        margin-bottom: 1.5rem;
+        border: 1px solid #ced4da;
+        border-radius: 10px;
+        font-size: 16px;
+        height: 50px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        border-color: #2575fc;
+        box-shadow: 0 0 0 0.25rem rgba(37, 117, 252, 0.25);
+      }
+      .password-field {
+        position: relative;
+        margin-bottom: 1.5rem;
+      }
+      .eye-icon {
+        position: absolute;
+        right: 16px;
+        top: 35%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #6c757d;
+        font-size: 18px;
+      }
+      button {
+        width: 100%;
+        background-color: #2575fc;
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        height: 50px;
+      }
+      button:hover {
+        background-color: #1a65e0;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+      .error-message {
+        color: #dc3545;
+        font-size: 16px;
+        margin-top: 10px;
+        text-align: center;
+        min-height: 20px;
+      }
+      .success-message {
+        color: #198754;
+        font-size: 14px;
+        margin-top: 10px;
+        text-align: center;
+      }
+      .link {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 15px;
+      }
+      .link a {
+        color: #2575fc;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .link a:hover {
+        text-decoration: underline;
+      }
+      #signup-username {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236c757d" class="bi bi-person-fill" viewBox="0 0 16 16"><path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/></svg>');
+        background-repeat: no-repeat;
+        background-position: 15px center;
+        background-size: 16px;
+      }
+      #signup-password {
+        background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%236c757d" class="bi bi-lock-fill" viewBox="0 0 16 16"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/></svg>');
+        background-repeat: no-repeat;
+        background-position: 15px center;
+        background-size: 16px;
+      }
+      .strength-meter {
+        height: 8px;
+        width: 100%;
+        background-color: #f1f1f1;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        overflow: hidden;
+      }
+      .strength-meter-fill {
+        height: 100%;
+        width: 0%;
+        transition: width 0.3s, background-color 0.3s;
+      }
+      .weak {
+        background-color: #dc3545;
+        width: 33%;
+      }
+      .medium {
+        background-color: #ffc107;
+        width: 66%;
+      }
+      .strong {
+        background-color: #198754;
+        width: 100%;
+      }
+      .password-requirements {
+        font-size: 14px;
+        margin-bottom: 1rem;
+      }
+      .requirement {
+        display: flex;
+        align-items: center;
+        color: red;
+      }
+      .requirement i {
+        margin-right: 8px;
+        color: red;
+        font-size: 10px;
+      }
+      .requirement.met {
+        color: #198754;
+      }
+      .requirement.met i {
+        color: #198754;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Signup Form -->
+      <div id="signup-form" class="form">
+        <h1>Sign Up</h1>
+        <form id="signupForm">
+          <input
+            type="text"
+            id="signup-username"
+            placeholder="Username"
+            required
+          />
+          <div class="password-field">
+            <input
+              type="password"
+              id="signup-password"
+              placeholder="Password"
+              required
+            />
+            <i id="show-signup-password" class="fas fa-eye eye-icon"></i>
+          </div>
+          <div class="strength-meter">
+            <div id="strength-meter-fill" class="strength-meter-fill"></div>
+          </div>
+          <div class="password-requirements">
+            <div class="requirement" id="length-req">
+              <i class="fas fa-circle"></i> At least 8 characters
+            </div>
+            <div class="requirement" id="uppercase-req">
+              <i class="fas fa-circle"></i> At least 1 uppercase letter
+            </div>
+            <div class="requirement" id="lowercase-req">
+              <i class="fas fa-circle"></i> At least 1 lowercase letter
+            </div>
+            <div class="requirement" id="number-req">
+              <i class="fas fa-circle"></i> At least 1 number
+            </div>
+          </div>
+          <button type="submit">Register</button>
+        </form>
+        <div id="signup-message" class="error-message"></div>
+        <p class="link">
+          Already have an account?
+          <a href="login.html" id="show-login-link">Login</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Script for signup functionality -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Hash function using SHA-256
+        function hashPassword(password) {
+          return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+        }
+        // Generate AES key
+        function generateAESKey() {
+          const randomArray = new Uint8Array(32);
+          window.crypto.getRandomValues(randomArray);
+          return Array.from(randomArray)
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+        }
+        // Encrypt AES key
+        function encryptAESKey(aesKey, password) {
+          return CryptoJS.AES.encrypt(aesKey, password).toString();
+        }
+        // Show message (error or success)
+        function showMessage(element, message, type) {
+          element.textContent = message;
+          element.className =
+            type === "error" ? "error-message" : "success-message";
+        }
+
+        // Toggle password visibility - Signup form
+        document
+          .getElementById("show-signup-password")
+          .addEventListener("click", function () {
+            const passwordInput = document.getElementById("signup-password");
+            const type =
+              passwordInput.getAttribute("type") === "password"
+                ? "text"
+                : "password";
+            passwordInput.setAttribute("type", type);
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+          });
+
+        // Password strength checker
+        const passwordInput = document.getElementById("signup-password");
+        const strengthMeterFill = document.getElementById(
+          "strength-meter-fill"
+        );
+        const lengthReq = document.getElementById("length-req");
+        const uppercaseReq = document.getElementById("uppercase-req");
+        const lowercaseReq = document.getElementById("lowercase-req");
+        const numberReq = document.getElementById("number-req");
+
+        passwordInput.addEventListener("input", function () {
+          const password = passwordInput.value;
+          let strength = 0;
+
+          // Check length
+          const hasLength = password.length >= 8;
+          if (hasLength) {
+            strength += 1;
+            lengthReq.classList.add("met");
+          } else {
+            lengthReq.classList.remove("met");
+          }
+
+          // Check uppercase
+          const hasUppercase = /[A-Z]/.test(password);
+          if (hasUppercase) {
+            strength += 1;
+            uppercaseReq.classList.add("met");
+          } else {
+            uppercaseReq.classList.remove("met");
+          }
+
+          // Check lowercase
+          const hasLowercase = /[a-z]/.test(password);
+          if (hasLowercase) {
+            strength += 1;
+            lowercaseReq.classList.add("met");
+          } else {
+            lowercaseReq.classList.remove("met");
+          }
+
+          // Check number
+          const hasNumber = /[0-9]/.test(password);
+          if (hasNumber) {
+            strength += 1;
+            numberReq.classList.add("met");
+          } else {
+            numberReq.classList.remove("met");
+          }
+
+          // Update strength meter
+          strengthMeterFill.className = "strength-meter-fill";
+          if (strength === 1 || strength === 2) {
+            strengthMeterFill.classList.add("weak");
+          } else if (strength === 3) {
+            strengthMeterFill.classList.add("medium");
+          } else if (strength === 4) {
+            strengthMeterFill.classList.add("strong");
+          }
+        });
+
+        // Signup form submission
+        document
+          .getElementById("signupForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const username = document
+              .getElementById("signup-username")
+              .value.trim();
+            const password = document.getElementById("signup-password").value;
+            const messageElement = document.getElementById("signup-message");
+
+            // Validate inputs
+            if (!username || !password) {
+              showMessage(
+                messageElement,
+                "Username and password are required",
+                "error"
+              );
+              return;
+            }
+
+            // Validate password requirements
+            const hasLength = password.length >= 8;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+
+            if (!hasLength || !hasUppercase || !hasLowercase || !hasNumber) {
+              showMessage(
+                messageElement,
+                "Password must meet all requirements",
+                "error"
+              );
+              return;
+            }
+
+            try {
+              // Get or initialize users array
+              let users = JSON.parse(localStorage.getItem("users")) || [];
+
+              // Check if username already exists
+              if (users.some((user) => user.username === username)) {
+                showMessage(messageElement, "Username already exists", "error");
+                return;
+              }
+
+              // Generate and encrypt AES key
+              const aesKey = generateAESKey();
+              const encryptedAESKey = encryptAESKey(aesKey, password);
+
+              // Hash the password
+              const hashedPassword = hashPassword(password);
+
+              // Create user object
+              const userData = {
+                username: username,
+                password: hashedPassword,
+                encryptedAESKey: encryptedAESKey,
+                createdAt: new Date().toISOString(),
+              };
+
+              // Add to users array and save
+              users.push(userData);
+              localStorage.setItem("users", JSON.stringify(users));
+
+              // Initialize empty assessment for user
+              let assessments =
+                JSON.parse(localStorage.getItem("assessments")) || [];
+              assessments.push({ username: username, data: {} });
+              localStorage.setItem("assessments", JSON.stringify(assessments));
+
+              // Show success message
+              showMessage(
+                messageElement,
+                "Account created successfully! Redirecting to login...",
+                "success"
+              );
+
+              // Redirect to login page
+              setTimeout(function () {
+                window.location.href = "login.html";
+              }, 1500);
+            } catch (error) {
+              console.error("Registration error:", error);
+              showMessage(
+                messageElement,
+                "An error occurred during registration. Please try again.",
+                "error"
+              );
+            }
+          });
+
+        // Check if localStorage is available
+        function isLocalStorageAvailable() {
+          try {
+            const test = "__test__";
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        // Show warning if localStorage is not available
+        if (!isLocalStorageAvailable()) {
+          const signupMessage = document.getElementById("signup-message");
+          showMessage(
+            signupMessage,
+            "Local storage is not available. Signup functionality will not work.",
+            "error"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
